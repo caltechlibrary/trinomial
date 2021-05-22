@@ -13,9 +13,9 @@ import trinomial
 
 def test_basic():
     trinomial.set_unique_key('x')
-    assert trinomial.anon('foo@bar.com') == '3dcca7b7c0'
-    assert trinomial.anon('foo@bar.com') == '3dcca7b7c0'
+    assert trinomial.anon('foo@bar.com') == '55086f20ea'
+    assert trinomial.anon('foo@bar.com') == '55086f20ea'
 
 def test_repeat():
     trinomial.set_unique_key('x')
-    assert trinomial.anon('foo@bar.com') == '3dcca7b7c0'
+    assert trinomial.anon('foo@bar.com') == '55086f20ea'
