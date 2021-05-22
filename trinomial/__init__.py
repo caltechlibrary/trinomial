@@ -17,10 +17,10 @@ file "LICENSE" for more information.
 #  ╰────────────────────── Notice ── Notice ── Notice ─────────────────────╯
 
 __version__     = '0.0.1'
-__description__ = 'Simple text string anonimization'
+__description__ = 'A simple name anonymization library'
 __url__         = 'https://github.com/caltechlibrary/trinomial'
 __author__      = 'Michael Hucka'
-__email__       = 'helpdesk@library.caltech.edu'
+__email__       = 'mhucka@library.caltech.edu'
 __license__     = 'BSD 3-clause'
 
 
