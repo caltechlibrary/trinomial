@@ -1,5 +1,5 @@
 '''
-Trinomial: TRIvial Name anOnyMIzAtion Library
+Trinomial: TRIvial aNOnyMIzAtion Library
 
 Copyright
 ---------
