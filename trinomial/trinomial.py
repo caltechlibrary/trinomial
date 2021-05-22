@@ -106,4 +106,11 @@ def anon(text, length = 10):
 
 
 def set_unique_key(key):
-    _UNIQUE_KEY = key
+    global _UNIQUE_KEY
+    if type(key) is bytes:
+        _UNIQUE_KEY = key
+    else:
+        try:
+            _UNIQUE_KEY = str(key).encode()
+        except (UnicodeDecodeError, AttributeError):
+            pass
