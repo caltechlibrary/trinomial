@@ -22,10 +22,9 @@ Trinomial is a simple Python library for performing a one-way transformation fro
 
 ## Introduction
 
-If you want to preserve user's privacy in software applications, you need to avoid storing or printing user identities to the maximum extent possible. One of the situations in which user identities can leak is software logging or debugging messages. Even when stored only on servers in server logs, they are at risk of being discovered by systems administrators, hackers, or the developers of the software. One way to alleviate this risk is to avoid writing user-identifiable information in log and debug messages. However, it's often important for debugging or other analysis to be able to recognize the same user in multiple messages; _completely_ removing identities can make debugging impossible. What we need is a way to tell user _A_ from user _B_, even if we don't care and don't want to know who _A_ and _B_ are in the real world.
+If you want to preserve user's privacy in software applications, you need to avoid storing or printing user identities to the maximum extent possible. One of the situations in which user identities can leak is software logging or debugging messages. Even when stored only on servers in server logs, identities are at risk of exposure to systems administrators, hackers, or the developers of the software. One way to alleviate this risk is to avoid writing user-identifiable information in log and debug messages. However, it's often important for debugging or other analysis to be able to recognize the same user in multiple messages even if we don't want to know their real identities: we need a way to tell user _A_ from user _B_, even if we don't care and don't want to know who _A_ and _B_ are in the real world.
 
-Trinomial (_**tri**vial **n**ame an**o**ny**mi**z**a**tion **l**ibrary_) is a Python package that can help keep users anonymous in such situations. It takes a string (such as an email address, or a name) and transforms it in a consistent way &ndash; the same input will always yield the same output &ndash; that is also **noninvertible**: given only the output, it is extremely difficult to determine what the original input was, even knowing Trinomial's source code.
-
+Trinomial (_**tri**vial **n**ame an**o**ny**mi**z**a**tion **l**ibrary_) is a Python package that can help keep users anonymous in such situations. It takes a string (such as an email address, or a name) and transforms it in a consistent way &ndash; the same input will always yield the same output &ndash; that is also **noninvertible**: given only the output, it is extremely difficult to determine what the original input was, even knowing Trinomial's source code. You can apply Trinomial to names in error messages in your application, and the names will be transformed to short strings of (essentially) random hexadecimal digits everywhere they appear.
 
 ## Installation
 
@@ -53,7 +52,7 @@ The main function provided by Trinomial is `anon`. It takes an input string of c
 'bcb403adb7'
 ```
 
-The output of `anon` is a string of hexadecimal digits.  The function `anon` accepts an optional argument to control the length of the output string.  The default length is 10 characters.
+The output of `anon` is a string of hexadecimal digits.  The function `anon` accepts an optional argument to control the length of the output string.  The default length is 10 characters.  (See the section on [Known issues and limitations](#known-issues-and-limitations) for more information about the implications of this.)
 
 ```python
 >>> anon(email, length = 5)
@@ -61,7 +60,7 @@ The output of `anon` is a string of hexadecimal digits.  The function `anon` acc
 ```
 
 
-### Special functions
+### _Special functions_
 
 Trinomial takes measures to increase anonymity beyond what would be obtained by simply hashing text strings.  One is that it computes hashes by incorporating a unique identifier derived from the computer on which it is running.  Thus, a given input to the `anon` function on two different computers will produce two different results. This is on purpose, so that someone can't take the output of `anon` and easily mount an offline brute-force [preimage attack](https://en.wikipedia.org/wiki/Preimage_attack) to guess what input produced that output _without_ also having access to the machine that produced the output, to determine the unique identifier.  Nevertheless, for some purposes such as software testing, it may be desirable to set the unique identifier to a known value. This can be done using the function `set_unique_key`:
 
@@ -70,7 +69,7 @@ Trinomial takes measures to increase anonymity beyond what would be obtained by 
 >>> trinomial.set_unique_key('my secret unique id')
 ```
 
-**Do not do this in production code**. Setting the value in your code makes it much easier for someone to try to reverse the process of producing the output. This functionality is meant for testing and debugging.
+**Do not do this in production code**. Setting the value in your code makes it much easier for someone to try to reverse the process of producing the output. The function `set_unique_key` is meant for testing and debugging.
 
 
 ## Known issues and limitations
