@@ -1,14 +1,13 @@
-Template for software repositories by the Caltech Library
-=====================================================
+# Trinomial<img width="65em" align="right" src="https://github.com/caltechlibrary/trinomial/raw/main/.graphics/trinomial.png">
 
-This is a template README file for software repositories.  This first paragraph of the README should summarize your software in a concise fashion, preferably using no more than one or two sentences.
+Trinomial is a simple Python library for performing a one-way transformation from a text string (such as a person's name or email address) to a short alphanumeric character sequence. The result can be used in place of the original string to hide a person's identity in log messages and other similar situations.
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg?style=flat-square)](https://choosealicense.com/licenses/bsd-3-clause)
-[![Latest release](https://img.shields.io/github/v/release/caltechlibrary/template.svg?style=flat-square&color=b44e88)](https://github.com/caltechlibrary/template/releases)
+[![Python](https://img.shields.io/badge/Python-3.8+-brightgreen.svg?style=flat-square)](https://www.python.org/downloads/release/python-380/)
+[![Latest release](https://img.shields.io/github/v/release/caltechlibrary/trinomial.svg?style=flat-square&color=b44e88)](https://github.com/caltechlibrary/trinomial/releases)
 
 
-Table of contents
------------------
+## Table of contents
 
 * [Introduction](#introduction)
 * [Installation](#installation)
@@ -21,82 +20,95 @@ Table of contents
 * [Acknowledgments](#authors-and-acknowledgments)
 
 
-Introduction
-------------
+## Introduction
 
-This repository is a GitHub template repostory for creating software project repositories at the Caltech Library.  The [associated wiki page](https://github.com/caltechlibrary/template/wiki/Using-this-template-repo) explains how to use the template repository.
+If you want to preserve user's privacy in software applications, you need to avoid storing or printing user identities to the maximum extent possible. One of the situations in which user identities can leak is software logging or debugging messages. Even when stored only on servers in server logs, they are at risk of being discovered by systems administrators, hackers, or the developers of the software. One way to help avoid this risk is to avoid writing user-identifiable information in log and debug messages. However, it's often important for debugging or other analysis to be able to recognize the same user in multiple messages; _completely_ removing identities can make debugging impossible. What we need is a way to tell user _A_ from user _B_, even if we don't care and don't want to know who _A_ and _B_ are in the real world.
 
-This README file is in Markdown format, and is meant to provide a template for README files as well an illustration of what the README file can be expected to look like.  For a software project, this [Introduction](#introduction) section &ndash; which you are presently reading &ndash; should provide background for the project, a brief explanation of what the project is about, and optionally, pointers to resources that can help orient readers.  Ideally, this section should be short.
+Trinomial (_**tri**vial **n**ame an**o**ny**mi**z**a**tion **l**ibrary_) is a Python package that can help keep users anonymous in such situations. It takes a string (such as an email address, or a name) and transforms it in a consistent way &ndash; the same input will always yield the same output &ndash; that is also **noninvertible**: given only the output, it is extremely difficult to determine what the original input was, even knowing Trinomial's source code.
 
 
-Installation
-------------
+## Installation
 
-Begin this section by mentioning any prerequisites that may be important for users to have before they can use your software.  Examples include hardware and operating system requirements.
+The instructions below assume you have a Python interpreter installed on your computer; if that's not the case, please first [install Python version 3](INSTALL-Python3.md) and familiarize yourself with running Python programs on your system.
 
-Next, provide step-by-step instructions for installing the software, preferably with command examples that can be copy-pasted by readers into their software environments. For example:
-
-```bash
-a command-line command here
+On **Linux**, **macOS**, and **Windows** operating systems, you should be able to install `trinomial` with [`pip`](https://pip.pypa.io/en/stable/installing/).  To install `trinomial` from the [Python package repository (PyPI)](https://pypi.org), run the following command:
+```
+python3 -m pip install trinomial
 ```
 
-Sometimes, subsections may be needed for different operating systems or particularly complicated installations.
+As an alternative to getting it from [PyPI](https://pypi.org), you can use `pip` to install `trinomial` directly from GitHub, like this:
+```sh
+python3 -m pip install git+https://github.com/caltechlibrary/trinomial.git
+```
  
 
-Usage
------
+## Usage
 
-This [Usage](#usage) section would explain more about how to run the software, what kind of behavior to expect, and so on.
+The main function provided by Trinomial is `anon`. It takes an input string of characters and returns a transformed, shorter string.
 
-### _Basic operation_
+```python
+>>> from trinomial import anon
+>>> email = 'flower@example.com'
+>>> anon(email)
+'bcb403adb7'
+```
 
-Begin with the simplest possible example of how to use your software.  Provide example command lines and/or screen images, as appropriate, to help readers understand how the software is expected to be used.  Many readers are likely to look for command lines they can copy-paste directly from your explanations, so it's best to keep that in mind as you write examples.
+The output of `anon` is a string of hexadecimal digits.  The function `anon` accepts an optional argument to control the length of the output string.  The default length is 10 characters.
 
-### _Additional options_
-
-Some projects need to communicate additional information to users and can benefit from additional sections in the README file.  It's difficult to give specific instructions &ndash; a lot depends on your software, your intended audience, etc.  Use your judgement and ask for feedback from users or colleagues to help figure out what else is worth explaining.
-
-
-Known issues and limitations
-----------------------------
-
-In this section, summarize any notable issues and/or limitations of your software.  If none are known yet, this section can be omitted (and don't forget to remove the corresponding entry in the [Table of Contents](#table-of-contents) too); alternatively, you can leave this section in and write something along the lines of "none are known at this time".
-
-
-Getting help
-------------
-
-Inform readers of how they can contact you, or at least how they can report problems they may encounter.  This may simply be a request to use the issue tracker on your repository, but many projects have associated chat or mailing lists, and this section is a good place to mention those.
+```python
+>>> anon(email, length = 5)
+'ed598'
+```
 
 
-Contributing
-------------
+### Special functions
 
-This section is optional; if your repository is for a project that accepts open-source contributions, then this section is where you can mention how people can offer contributions, and point them to your guidelines for contributing.  (If you delete this section, don't forget to remove the corresponding entry in the [Table of Contents](#table-of-contents) too.)
+Trinomial takes measures to increase anonymity beyond what would be obtained by simply hashing text strings.  One is that it computes hashes by incorporating a unique identifier derived from the computer on which it is running.  Thus, a given input to the `anon` function on two different computers will produce two different results. This is on purpose, so that someone can't take the output of `anon` and easily mount an offline brute-force [preimage attack](https://en.wikipedia.org/wiki/Preimage_attack) to guess what input produced that output _without_ also having access to the machine that produced the output, to determine the unique identifier.  Nevertheless, for some purposes such as software testing, it may be desirable to set the unique identifier to a known value. This can be done using the function `set_unique_key`:
+
+```python
+>>> import trinomial
+>>> trinomial.set_unique_key('my secret unique id')
+```
+
+**Do not do this in production code**. Setting the value in your code makes it much easier for someone to try to reverse the process of producing the output. This functionality is meant for testing and debugging.
 
 
-License
--------
+## Known issues and limitations
+
+Trinomial is intended as a simple package to replace meaningful textual information with meaningless identifiers, such that (a) it is impractically difficult to discover the original text given only such an identifier, and (b) correlations between occurrences of the original text are preserved. However, it is at best a pseudoanonymization tool. It is not intended for sensitive applications, or legal requirements such as the GDPR,  HIPAA, or similar situations.
+
+The possibilty of output collisions between two or more identical input values is low, but not zero. The calculation of collisions for a hash function is based on the number of bits _b_ in the hashed output value, according to the function 2<sup>b/2</sup>.  A hexadecimal character can encode 4 bits, which means a hexadecimal string of length _n_ is equal to _n_&times;4 bits. This means that the **Trinomial default length of 10 output characters gives a maximum of 2<sup>(4&times;10)/2</sup> = 1,048,576 possible unique values**. In the author's opinion, this is reasonable for a situation such as (e.g.) anonymizing email addresses in the logs of a program at a small educational institution, but may be too low for other situations. Users may want to increase the `length` parameter to `anon` accordingly.
+
+
+## Getting help
+
+If you find an issue, please submit it in [the GitHub issue tracker](https://github.com/caltechlibrary/trinomial/issues) for this repository.
+
+
+## Contributing
+
+We would be happy to receive your help and participation with enhancing Trinomial!  Please visit the [guidelines for contributing](CONTRIBUTING.md) for some tips on getting started.
+
+
+## License
 
 Software produced by the Caltech Library is Copyright (C) 2021, Caltech.  This software is freely distributed under a BSD/MIT type license.  Please see the [LICENSE](LICENSE) file for more information.
 
 
-Authors and history
----------------------------
+## Authors and history
 
-In this section, list the authors and contributors to your software project.  Adding additional notes here about the history of the project can make it more interesting and compelling.  This is also a place where you can acknowledge other contributions to the work and the use of other people's software or tools.
+Trinomial was designed and implemented by [Michael Hucka](https://github.com/mhucka).
 
 
-Acknowledgments
----------------
+## Acknowledgments
 
 This work was funded by the California Institute of Technology Library.
 
-(If this work was also supported by other organizations, acknowledge them here.  In addition, if your work relies on software libraries, or was inspired by looking at other work, it is appropriate to acknowledge this intellectual debt too.)
+The [vector artwork](https://thenounproject.com/term/anonymous/225644/) used as a starting point for the logo for this repository was created by [Rflor](https://thenounproject.com/rflor/) for the [Noun Project](https://thenounproject.com).  It is licensed under the Creative Commons [Attribution 3.0 Unported](https://creativecommons.org/licenses/by/3.0/deed.en) license.  The vector graphics was modified by Mike Hucka to change the color.
 
 <div align="center">
   <br>
   <a href="https://www.caltech.edu">
-    <img width="100" height="100" src="https://raw.githubusercontent.com/caltechlibrary/template/main/.graphics/caltech-round.png">
+    <img width="100" height="100" src="https://raw.githubusercontent.com/caltechlibrary/trinomial/main/.graphics/caltech-round.png">
   </a>
 </div>
