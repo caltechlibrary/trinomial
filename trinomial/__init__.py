@@ -27,7 +27,7 @@ __license__     = 'BSD 3-clause'
 # Exports.
 # .............................................................................
 
-from .trinomial import masked
+from .trinomial import anon, set_unique_key
 
 
 # Miscellaneous utilities.
