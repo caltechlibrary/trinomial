@@ -90,6 +90,7 @@ _UNIQUE_KEY = _key_for_host()
 # .............................................................................
 
 def anon(text, length = 10):
+    global _UNIQUE_KEY
     if text is None:
         return ''
     h = blake2b(digest_size = length, key = _UNIQUE_KEY)
