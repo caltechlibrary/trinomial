@@ -41,6 +41,8 @@ logging.info(f'got submission from user {anon(email)}')
 logging.info(f'redirecting {anon(email)} to page /flowers')
 ```
 
+Please be aware that this kind of approach **only offers pseudoanonymity at best**. It cannot protect against a number of other methods of breaking anonymity, such as analyzing correlations between information in your logs or reading IP addresses (if your logs also contain IP addresses).  Trinomial can help improve anonymity, but it cannot do everything alone. It is **not intended for sensitive applications, or legal requirements such as the GDPR,  HIPAA, or producing public data sets, or similar situations**.
+
 
 ## Installation
 
