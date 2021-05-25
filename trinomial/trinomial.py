@@ -25,10 +25,8 @@ def _key_for_host():
     key = None
     sys = platform.system().lower()
 
-    # Our fallback aproach is uuid.getnode(). However, that's based on the
-    # network hardware address of the host, and AFAIK it could change after a
-    # reboot if the machine has multiple NICs.  So we try first to find a
-    # more stable identifier for those systems where we know how to do it.
+    # Our fallback is uuid.getnode(), but it's a poor choice for this, so first
+    # try to find a more stable identifier for those systems where we know how.
     if sys.startswith('darwin'):
         import json
         import re
@@ -78,7 +76,12 @@ def _key_for_host():
     if key:
         return key.encode()
     else:
-        # OK, we have to use our fallback approach.
+        # We have to use the fallback. It's not a great solution: it uses the
+        # MAC address of a NIC (which may change on reboot if a machine has
+        # multiple network interfaces) and if it can't get the address, getnode
+        # resorts to generating a random number.  Moreover, other machines on
+        # the same network can learn the MAC address, which makes it poor for
+        # privacy.  Despite all this, I haven't found a better fallback option.
         import uuid
         return str(uuid.getnode()).encode()
 
@@ -93,8 +96,8 @@ def anon(text, length = 10):
     global _UNIQUE_KEY
     if text is None:
         return ''
-    h = blake2b(digest_size = length, key = _UNIQUE_KEY)
-    h.update(text.encode())
+    hash = blake2b(digest_size = length, key = _UNIQUE_KEY)
+    hash.update(text.encode())
     # Hex digests produce strings of twice the length.  We truncate the
     # result to the desired length.  This doubles the number of possible
     # collisions compared to the unmodified Blake2b hash.  That actually
@@ -103,7 +106,7 @@ def anon(text, length = 10):
     # collision risk is measured in terms of bits in the final hash string,
     # according to 2^(n/2), where n is the number of bits.  A length of 10
     # hex digits is 40 bits => 2^(40/2) = 2^20 = 1,048,576 unique values.
-    return h.hexdigest()[:length]
+    return hash.hexdigest()[:length]
 
 
 def set_unique_key(key):
