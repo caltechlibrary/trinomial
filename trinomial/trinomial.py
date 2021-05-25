@@ -93,6 +93,33 @@ _UNIQUE_KEY = _key_for_host()
 # .............................................................................
 
 def anon(text, length = 10):
+    '''Take "text" and transform it to a short string of hexadecimal digits.
+
+    The transformation is based on hashing the original string in combination
+    with a unique key derived from the computer on which Trinomial is used.
+    To the degree possible, the transformation is consistent, such that the
+    same input will always yield the same output.  This is guaranteed to be
+    the case within a single run of the program calling this function; it
+    should also be true from run to run as well, but on some systems, the
+    unique key may change after a reboot, and this will change the output for
+    a given input.  Virtual machines and cloud-provisioned systems, in
+    particular, may suffer from this limitation.
+
+    The unique key can be set explicitly using set_unique_key(...).
+
+    The possibility of output collisions between two or more identical input
+    values is low, but not zero.  The calculation of collisions for a hash
+    function is based on the number of bits b in the hashed output value,
+    according to the function 2^(b/2).  A hexadecimal character can encode 4
+    bits, which means a hexadecimal string of length n is equal to n * 4 bits.
+    This means that the Trinomial default length of 10 output characters
+    gives a maximum of 2^(4*10/2) = 1,048,576 possible unique values.  In the
+    author's opinion, this is reasonable for a situation such as (e.g.)
+    anonymizing email addresses in the logs of a program at a small
+    educational institution, but may be too low for other situations. Users
+    may want to increase the `length` parameter to `anon` accordingly.
+    '''
+
     global _UNIQUE_KEY
     if text is None:
         return ''
@@ -110,6 +137,17 @@ def anon(text, length = 10):
 
 
 def set_unique_key(key):
+    '''Reset the unique key used by anon(...) to a known value.
+
+    Setting this value will mean that anon(...) will generate the same output
+    for a given input on any host computer (instead of the goal, which is to
+    generate a different output on different computers).  This is intended for
+    testing and debugging.  Do not do this in production code.  Setting the
+    value in your code makes it much easier for someone to try to reverse the
+    process of producing the output.  The function `set_unique_key` is meant
+    for testing and debugging.
+    '''
+
     global _UNIQUE_KEY
     if type(key) is bytes:
         _UNIQUE_KEY = key
