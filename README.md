@@ -6,6 +6,8 @@ Trinomial is a simple Python library for performing a one-way transformation fro
 [![Python](https://img.shields.io/badge/Python-3.8+-brightgreen.svg?style=flat-square)](https://www.python.org/downloads/release/python-380/)
 [![Latest release](https://img.shields.io/github/v/release/caltechlibrary/trinomial.svg?style=flat-square&color=b44e88)](https://github.com/caltechlibrary/trinomial/releases)
 [![DOI](https://img.shields.io/badge/dynamic/json.svg?label=DOI&style=flat-square&color=lightgray&query=$.metadata.doi&uri=https://data.caltech.edu/api/record/1975)](https://data.caltech.edu/records/1975)
+[![PyPI](https://img.shields.io/pypi/v/trinomial.svg?style=flat-square&color=orange)](https://pypi.org/project/trinomial/)
+
 
 ## Table of contents
 
