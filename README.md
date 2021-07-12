@@ -5,7 +5,7 @@ Trinomial is a simple Python library for performing a one-way transformation fro
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg?style=flat-square)](https://choosealicense.com/licenses/bsd-3-clause)
 [![Python](https://img.shields.io/badge/Python-3.8+-brightgreen.svg?style=flat-square)](https://www.python.org/downloads/release/python-380/)
 [![Latest release](https://img.shields.io/github/v/release/caltechlibrary/trinomial.svg?style=flat-square&color=b44e88)](https://github.com/caltechlibrary/trinomial/releases)
-[![DOI](https://img.shields.io/badge/dynamic/json.svg?label=DOI&style=flat-square&color=lightgray&query=$.metadata.doi&uri=https://data.caltech.edu/api/record/1975)](https://data.caltech.edu/records/1975)
+[![DOI](https://img.shields.io/badge/dynamic/json.svg?label=DOI&style=flat-square&color=lightgray&query=$.metadata.doi&uri=https://data.caltech.edu/api/record/2030)](https://data.caltech.edu/records/2030)
 [![PyPI](https://img.shields.io/pypi/v/trinomial.svg?style=flat-square&color=orange)](https://pypi.org/project/trinomial/)
 
 
