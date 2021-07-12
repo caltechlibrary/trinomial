@@ -23,11 +23,11 @@ import platform
 
 def _key_for_host():
     key = None
-    sys = platform.system().lower()
+    operating_system = platform.system().lower()
 
     # Our fallback is uuid.getnode(), but it's a poor choice for this, so first
     # try to find a more stable identifier for those systems where we know how.
-    if sys.startswith('darwin'):
+    if operating_system.startswith('darwin'):
         import json
         import re
         from subprocess import check_output, SubprocessError
@@ -39,7 +39,7 @@ def _key_for_host():
             # Else, fall through.
         except SubprocessError as ex:
             pass
-    elif sys.startswith('linux'):
+    elif operating_system.startswith('linux'):
         # dmidecode is not an option because we have to find something we can
         # use without being root.  Next best choice is this:
         try:
@@ -55,7 +55,7 @@ def _key_for_host():
                 key = f.read().strip()
         except (OSError, IOError):
             pass
-    elif sys.startswith('win'):
+    elif operating_system.startswith('win'):
         import re
         from subprocess import check_output, SubprocessError
         # The following is based on a posting to Stack Overflow on 2019-10-16 by
